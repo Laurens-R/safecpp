@@ -3,8 +3,10 @@ set(CMAKE_CXX_STANDARD 26)
 add_library(safelib
         memory.hpp
         memory.cpp
-        ref.hpp
+        readonly_ref.hpp
         owner.hpp
+        mutable_ref.hpp
+        ref_counter.hpp
 )
 
 target_sources(safelib
