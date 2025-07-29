@@ -7,16 +7,15 @@
 #include <cstring>
 #include <memory>
 
-void safe::memory::release() const {
+constexpr void safe::memory::release() const {
     if (_ptr != nullptr) {
-        std::free(_ptr);
-        _ptr = nullptr;
+        _ptr.reset();
         _size = 0;
     }
 }
 
-safe::memory::memory(size_t size): _ptr(nullptr), _size(0) {
-    _ptr = static_cast<std::byte*>(std::malloc(size));
+safe::memory::memory(const size_t size): _ptr(nullptr), _size(0) {
+    _ptr = std::make_unique<std::byte[]>(size);
     _size = size;
 }
 
@@ -25,32 +24,32 @@ safe::memory::~memory() {
 }
 
 safe::memory::memory(const memory &other) {
-    _ptr = static_cast<std::byte*>(std::malloc(other._size));
+    _ptr = std::make_unique<std::byte[]>(other._size);
     _size = other._size;
-    std::memcpy(_ptr, other._ptr, _size);
+    std::memcpy(_ptr.get(), other._ptr.get(), _size);
 }
 
-safe::memory & safe::memory::operator=(const memory &other) {
+constexpr safe::memory & safe::memory::operator=(const memory &other) {
     if (&other == this) return *this;
 
     release();
     
-    _ptr = static_cast<std::byte*>(std::malloc(other._size));
+    _ptr = std::make_unique<std::byte[]>(other._size);
     _size = other._size;
-    std::memcpy(_ptr, other._ptr, _size);
+    std::memcpy(_ptr.get(), other._ptr.get(), _size);
     return *this;
 }
 
-safe::memory::memory(memory &&other) noexcept {
-    _ptr = other._ptr;
+constexpr safe::memory::memory(memory &&other) noexcept {
+    _ptr = std::move(other._ptr);
     _size = other._size;
     other.release();
 }
 
-safe::memory & safe::memory::operator=(memory &&other) noexcept {
+constexpr safe::memory & safe::memory::operator=(memory &&other) noexcept {
     if (&other == this) return *this;
     
-    _ptr = other._ptr;
+    _ptr = std::move(other._ptr);
     _size = other._size;
     other.release();
     
