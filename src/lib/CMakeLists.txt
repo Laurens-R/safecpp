@@ -6,7 +6,6 @@ add_library(safelib STATIC
         ref.hpp
         owner.hpp
         mut.hpp
-        ref_counter.hpp
         ranged.hpp
         assert.hpp
         var.hpp
