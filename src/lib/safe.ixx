@@ -9,6 +9,8 @@ module;
 #include "ref.hpp"
 #include "ranged.hpp"
 #include "var.hpp"
+#include "returnof.hpp"
+#include "ptr.hpp"
 
 export module safe;
 
@@ -19,4 +21,6 @@ export namespace safe {
     using safe::ref;
     using safe::ranged;
     using safe::var;
+    using safe::return_of;
+    using safe::ptr;
 }

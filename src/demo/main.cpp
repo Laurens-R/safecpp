@@ -42,8 +42,9 @@ void reference_example(const safe::ref<Example> &example_ref) {
      * also because the reference is copied, we don't have to care about
      * the lifetime of the original data.
      */
-    Example a = example_ref;
-
+    Example a = example_ref.clone();
+    auto id  = example_ref->id;
+    
     /* This would not compile. If you were able to copy the reference or seperately
      * store it across the lifetime of the original data, you would create unsafe
      * references/UB.
@@ -54,8 +55,14 @@ void reference_example(const safe::ref<Example> &example_ref) {
     */
 }
 
+safe::return_of<int> return_example() {
+    // This function returns an int wrapped in a return_of class.
+    // It can be used to return values safely without using raw pointers or references.
+    return 42;
+}
+
 int main() {
-    safe::owner<Example> example(Example{1, 2.0});
+    safe::owner<Example> example = Example{1, 2.0};
 
     //we can make a copy
     Example e = example;
@@ -63,6 +70,10 @@ int main() {
     reference_example(example);
 
     ranged_example(22);
+
+    auto meaning_of_life = return_example();
+    auto value = meaning_of_life.as_value();
+    safe::owner<int> other_meaning_of_life = return_example();
     
     return 0;
 }

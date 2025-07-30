@@ -8,10 +8,12 @@
 #include "mut.hpp"
 #include "ref.hpp"
 
+#include "common_operators.hpp"
+
 namespace safe {
     
-    template<typename T>
-    class owner {
+    template<typename T> //the added operators are included through 'deduce this' classes (effectively using a decorator type pattern)
+    class owner : public common_operators<T>, common_operators_unmutable<T> {
     private:
         T _data;
         ref<T> _readonly_ref;

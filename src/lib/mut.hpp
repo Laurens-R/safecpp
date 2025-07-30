@@ -7,9 +7,11 @@
 
 #include <algorithm>
 
+#include "common_operators.hpp"
+
 namespace safe {
-    template <typename T>
-    class mut {
+    template <typename T> //the added operators are included through 'deduce this' classes (effectively using a decorator type pattern)
+    class mut : public common_operators<T>, common_operators_unmutable<T> {
     private:
         T& _data;
     public:
@@ -38,10 +40,13 @@ namespace safe {
             return &_data;
         }
         
-        [[nodiscard]] constexpr operator T() const {
+        [[nodiscard]] T clone() const {
             return _data;
         }
 
+        [[nodiscar]] T & unsafe_get() const {
+            return _data;
+        }
     };
 }
 #endif //MUTABLE_H

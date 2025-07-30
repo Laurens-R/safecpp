@@ -8,9 +8,11 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include "common_operators.hpp"
+
 namespace safe {
     template<typename T, T TFrom, T TTo, T TDefault = T{}>
-    class ranged {
+    class ranged : public common_operators_unmutable<T> {
         static_assert(TDefault >= TFrom && TDefault <= TTo, "TDefault must be within the range [TFrom, TTo]");
         static_assert(std::is_arithmetic_v<T>, "Type T must be an arithmetic type (integral or floating point)");
         static_assert(TFrom < TTo, "TFrom must be less than TTo");

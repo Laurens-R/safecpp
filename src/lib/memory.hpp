@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include "returnof.hpp"
+
 namespace safe {
 
     /**
@@ -36,20 +38,60 @@ namespace safe {
             return reinterpret_cast<T *>(base * mask);
         }
 
-        constexpr void release() const;
+        constexpr void release() const {
+            if (_ptr != nullptr) {
+                _ptr.reset();
+                _size = 0;
+            }
+        }
         
     public:
         /**
-         * 
+         * Initializes a memory block with the given size.
          * @param size The size of the memory block to allocate in bytes.
          */
-        memory(size_t size);
-         ~memory();
-        memory(const memory &other);
-        constexpr memory &operator=(const memory &other);
-        constexpr memory(memory &&other) noexcept;
-        constexpr memory &operator=(memory &&other) noexcept;
+        memory(const size_t size): _ptr(nullptr), _size(0) {
+            _ptr = std::make_unique<std::byte[]>(size);
+            _size = size;
+        }
 
+        ~memory() {
+            release();
+        }
+
+        memory(const memory &other) {
+            _ptr = std::make_unique<std::byte[]>(other._size);
+            _size = other._size;
+            std::memcpy(_ptr.get(), other._ptr.get(), _size);
+        }
+
+        constexpr safe::memory & operator=(const memory &other) {
+            if (&other == this) return *this;
+
+            release();
+    
+            _ptr = std::make_unique<std::byte[]>(other._size);
+            _size = other._size;
+            std::memcpy(_ptr.get(), other._ptr.get(), _size);
+            return *this;
+        }
+
+        constexpr memory(memory &&other) noexcept {
+            _ptr = std::move(other._ptr);
+            _size = other._size;
+            other.release();
+        }
+
+        constexpr safe::memory & operator=(memory &&other) noexcept {
+            if (&other == this) return *this;
+    
+            _ptr = std::move(other._ptr);
+            _size = other._size;
+            other.release();
+    
+            return *this;
+        }
+        
         /**
          * 
          * @return The size of the memory block in bytes.
@@ -61,7 +103,7 @@ namespace safe {
          * @return A value copy of type T at the given offset.
          */
         template<typename T> requires ((std::is_fundamental_v<T> || std::is_pod_v<T>) && sizeof(T) < sizeof(uintptr_t))
-        constexpr T get(const size_t offset) const {
+        constexpr return_of<T> get(const size_t offset) const {
             return *get_pointer<T>(offset);
         }
         
@@ -73,7 +115,7 @@ namespace safe {
          * @return A pointer to type T at the given offset.
          */
         template<typename T> requires ((std::is_fundamental_v<T> || std::is_pod_v<T>) && sizeof(T) >= sizeof(uintptr_t))
-        constexpr const T * get(const size_t offset) const {
+        constexpr return_of<ref<T>> get(const size_t offset) const {
             return *get_pointer<T>(offset);
         }
 
@@ -119,7 +161,7 @@ namespace safe {
          * @returns A span of type T starting at the given offset and with the given count.
          */
         template<typename T> requires ((std::is_fundamental_v<T> || std::is_pod_v<T>) && sizeof(T) < sizeof(uintptr_t))
-        constexpr std::span<T> span(const size_t offset, const size_t count) {
+        constexpr return_of<const std::span<T>> span(const size_t offset, const size_t count) const {
             //we need to ensure that the latest element (offset + count) is within bounds
             if (!is_safe_index<T>(offset + count)) {
                 throw std::out_of_range("Offset is out of bounds");

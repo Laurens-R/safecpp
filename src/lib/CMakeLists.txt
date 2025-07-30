@@ -2,13 +2,15 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_library(safelib STATIC
         memory.hpp
-        memory.cpp
         ref.hpp
         owner.hpp
         mut.hpp
         ranged.hpp
         assert.hpp
         var.hpp
+        returnof.hpp
+        ptr.hpp
+        common_operators.hpp
 )
 
 target_sources(safelib
