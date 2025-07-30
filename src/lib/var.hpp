@@ -45,11 +45,7 @@ namespace safe {
             return *this;
         }
 
-        operator T() const {
-            return _value;
-        }
-
-        operator const T &() const {
+        constexpr T clone() const {
             return _value;
         }
     };
