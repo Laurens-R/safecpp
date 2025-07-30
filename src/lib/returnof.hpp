@@ -1,6 +1,27 @@
-//
-// Created by laure on 30/07/2025.
-//
+/*
+    MIT License
+
+    Copyright (c) 2025 Laurens Ruijtenberg
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
 
 #ifndef RETURNOF_HPP
 #define RETURNOF_HPP
@@ -48,22 +69,22 @@ namespace safe {
             return _value;
         }
 
-        owner<T> as_owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
+        owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
             static_assert(!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>, "This return value contains either a reference or mutable reference. As such ownership cannot be transferred over.");
             return _value;
         }
 
-        ref<T> as_ref() {
+        ref<T> ref() {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
             return _value;
         }
 
-        mut<T> as_mut() {
+        mut<T> mut() {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a safe mutable reference.");
             return _value;
         }
 
-        T as_value() {
+        T value() {
             return _value;
         }
 

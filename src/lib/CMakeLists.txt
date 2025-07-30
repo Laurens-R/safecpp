@@ -7,10 +7,10 @@ add_library(safelib STATIC
         mut.hpp
         ranged.hpp
         assert.hpp
-        var.hpp
         returnof.hpp
         ptr.hpp
         common_operators.hpp
+        safe.hpp
 )
 
 target_sources(safelib

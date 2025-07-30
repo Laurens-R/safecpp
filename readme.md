@@ -86,7 +86,9 @@ safe::owner<T>
 
 Description: An instance of this class holds and owns an value of type `T`. The owner class will allow the developer to modify the value, copy it, etc.
 It can hand out safe references to the value to other methods. The owner instance itself can also be copied, in effect also creating multiple
-copies of the value that it holds.
+copies of the value that it holds. You can pass the `safe::owner<T>` instance around to other methods via `safe::ref<T>` or `safe::mut<T>` arguments. It is implicitly converted
+so it allows for a natural way to share the value with other methods while maintaining the ownership of the value itself. We require all types that are put in an `safe::owner<T>`
+instance to have a default constructor, again to encourage to always have a valid value in the owner instance.
 
 ```C++
 safe::ref<T>
@@ -124,14 +126,22 @@ Converting to a regular type T is not implicitly allowed, because we want the de
 on the `safe::return_of<TRet>` instance.
 
 ```C++
-safe::var<T, TDefault = T{}>
-```
-A very simple wrapper around a value of type 'T', which basically ensures that the value is always initialized. Either to the default value of the type itself or to a provided default value
-which can be passed as a template argument. This type is primarily usefull when used as a function/member argument. For members it is advised to use an safe::owner<T>, because that will also
-apply a default value if not specified.
-
-```C++
 safe::ranged<typename T, T TFrom, T TTo, T TDefault = T{}>
 ```
 Can be used as an argument to a function to enforce that the numerical value that is passed always fits in the range between TFrom and TTo. It only accepts numerical types like char, shor, int, float, double etc.
 This variable is also default initialized to TDefault. It is also one of the types which is allowed to implicitly cast to its underlying type, because we are talking about numerical primitives.
+
+## Basic example
+
+```C++
+
+import safe;
+
+struct Example {
+    int id = 0;
+    double value = 0.0;
+};
+
+
+
+```
