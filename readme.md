@@ -21,6 +21,11 @@ framework that will try to preach to you on what is the "right" way.
 Because of it's straightforward implemention compilers are likely able to highly optimize the code. Furthermore we also
 extensively use `constexpr` to allow the compiler to evaluate expressions at compile time, which can lead to further optimizations.
 
+Currently the framework is setup as a module enabled C++20/23 library. I will eventually also provide a regular header implementation, but you can
+already extract the hpp files in the `src/lib` folder  and copy to them to your own project (make sure to include the MIT license and accreditation!) and use this
+framework with a compiler which doesn't support modules yet.
+
+
 ## Disclaimer
 
 In the end C++ will always allow you to bypass this framework and write unsafe code. So using this framework
