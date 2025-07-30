@@ -69,7 +69,7 @@ namespace safe {
             return _data;
         }
 
-        [[no_discard]] constexpr T & unsafe_reference() const {
+        [[nodiscard]] constexpr T & unsafe_reference() const {
             return _data;
         }  
     };

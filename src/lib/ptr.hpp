@@ -59,7 +59,7 @@ namespace safe {
         ptr(ptr<T> &&other) noexcept = delete;
         ptr<T> & operator=(ptr<T> &&other) noexcept = delete;
         
-        [[nodiscar]] constexpr T * operator->() const {
+        [[nodiscard]] constexpr T * operator->() const {
             return _ptr.get();
         }
 

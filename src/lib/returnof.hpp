@@ -54,37 +54,37 @@ namespace safe {
             return *this;
         }
 
-        [[nodiscar]] constexpr operator owner<T>() const {
+        [[nodiscard]] constexpr operator owner<T>() const {
             static_assert(!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>, "This return value contains either a reference or mutable reference. As such ownership cannot be transferred over.");
             return _value;
         }
 
-        [[nodiscar]] constexpr operator ref<T>() const {
+        [[nodiscard]] constexpr operator ref<T>() const {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
             return _value;
         }
 
-        [[nodiscar]] constexpr operator mut<T>() const {
+        [[nodiscard]] constexpr operator mut<T>() const {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a mutable reference.");
             return _value;
         }
 
-        [[nodiscar]] constexpr owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
+        [[nodiscard]] constexpr owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
             static_assert(!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>, "This return value contains either a reference or mutable reference. As such ownership cannot be transferred over.");
             return _value;
         }
 
-        [[nodiscar]] constexpr ref<T> ref() {
+        [[nodiscard]] constexpr ref<T> ref() {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
             return _value;
         }
 
-        [[nodiscar]] constexpr mut<T> mut() {
+        [[nodiscard]] constexpr mut<T> mut() {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a safe mutable reference.");
             return _value;
         }
 
-        [[nodiscar]] constexpr T value() {
+        [[nodiscard]] constexpr T value() {
             return _value;
         }
 

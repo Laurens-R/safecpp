@@ -54,7 +54,7 @@ namespace safe {
             return _data;
         }
 
-        [[no_discard]] constexpr const T & unsafe_reference() const {
+        [[nodiscard]] constexpr const T & unsafe_reference() const {
             return _data;
         }       
     };
