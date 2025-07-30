@@ -38,53 +38,53 @@ namespace safe {
         static_assert(!std::is_void_v<T>, "Returning void is not allowed, just use void to indicate no return value.");
         T _value;
     public:
-        return_of(const T &value) : _value(value) {}
-        return_of(T &&value) noexcept : _value(std::move(value)) {}
+        constexpr return_of(const T &value) : _value(value) {}
+        constexpr return_of(T &&value) noexcept : _value(std::move(value)) {}
 
         return_of(const return_of<T> &other) = delete;
         return_of(return_of<T> &&other) noexcept = delete;
 
-        return_of &operator=(const T &value) {
+        constexpr return_of &operator=(const T &value) {
             _value = value;
             return *this;
         }
  
-        return_of &operator=(T &&value) noexcept {
+        constexpr return_of &operator=(T &&value) noexcept {
             _value = std::move(value);
             return *this;
         }
 
-        operator owner<T>() const {
+        [[nodiscar]] constexpr operator owner<T>() const {
             static_assert(!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>, "This return value contains either a reference or mutable reference. As such ownership cannot be transferred over.");
             return _value;
         }
 
-        operator ref<T>() const {
+        [[nodiscar]] constexpr operator ref<T>() const {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
             return _value;
         }
 
-        operator mut<T>() const {
+        [[nodiscar]] constexpr operator mut<T>() const {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a mutable reference.");
             return _value;
         }
 
-        owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
+        [[nodiscar]] constexpr owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
             static_assert(!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>, "This return value contains either a reference or mutable reference. As such ownership cannot be transferred over.");
             return _value;
         }
 
-        ref<T> ref() {
+        [[nodiscar]] constexpr ref<T> ref() {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
             return _value;
         }
 
-        mut<T> mut() {
+        [[nodiscar]] constexpr mut<T> mut() {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a safe mutable reference.");
             return _value;
         }
 
-        T value() {
+        [[nodiscar]] constexpr T value() {
             return _value;
         }
 

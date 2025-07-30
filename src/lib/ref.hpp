@@ -37,12 +37,12 @@ namespace safe {
         ref() = delete;
         constexpr ref(const T & data) : _data(data) {}        
         
-        ref(const ref<T> & other) = delete;
-        ref(ref<T> && other) noexcept = delete;
-        ref<T> & operator=(const ref<T> & other) = delete;
-        ref<T> & operator=(ref<T> && other) noexcept = delete;
+        constexpr ref(const ref<T> & other) = delete;
+        constexpr ref(ref<T> && other) noexcept = delete;
+        constexpr ref<T> & operator=(const ref<T> & other) = delete;
+        constexpr ref<T> & operator=(ref<T> && other) noexcept = delete;
 
-        const T* operator->() const {
+        constexpr const T* operator->() const {
             return &_data;
         }
 
@@ -54,7 +54,7 @@ namespace safe {
             return _data;
         }
 
-        [[no_discard]] const T & unsafe_reference() const {
+        [[no_discard]] constexpr const T & unsafe_reference() const {
             return _data;
         }       
     };

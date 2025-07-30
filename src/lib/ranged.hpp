@@ -38,28 +38,28 @@ namespace safe {
         static_assert(std::is_arithmetic_v<T>, "Type T must be an arithmetic type (integral or floating point)");
         static_assert(TFrom < TTo, "TFrom must be less than TTo");
         
-        T _value;
+        T _data;
     
     public:
-        ranged(T value = TDefault) : _value(value) {
+        constexpr ranged(T value = TDefault) : _data(value) {
             if (value < TFrom || value > TTo) {
                 throw std::out_of_range("Value is out of range");
             }
         }
         
-        ranged(const ranged<T, TFrom, TTo> &other) : _value(other._data) {
+        constexpr ranged(const ranged<T, TFrom, TTo> &other) : _data(other._data) {
             //no additional checks needed, as the value is already validated
         }
         
-        [[nodiscard]] constexpr ranged& operator=(const ranged<T, TFrom, TTo> &other) {
+        constexpr ranged& operator=(const ranged<T, TFrom, TTo> &other) {
             if (this != &other) {
-                  _value = other._data;
+                  _data = other._data;
             }
             return *this;
         }
 
         template<T TFromOther, T TToOther>
-        explicit ranged(const ranged<T, TFromOther, TToOther> &other) : _value(other.value()) {
+        constexpr ranged(const ranged<T, TFromOther, TToOther> &other) : _data(other.value()) {
             if (other.value() < TFrom || other.value() > TTo) {
                 throw std::out_of_range("Value is out of range");
             }
@@ -68,25 +68,74 @@ namespace safe {
         template<T TFromOther, T TToOther>
         [[nodiscard]] constexpr ranged& operator=(const ranged<T, TFromOther, TToOther> &other) {
             if (this != &other) {
-                if (_value < TFrom || _value > TTo) {
+                if (_data < TFrom || _data > TTo) {
                     throw std::out_of_range("Value is out of range");
                 }
                 
-                _value = other.value();
+                _data = other.value();
             }
             return *this;
         }
 
         //this is allowed in this case because we are dealing with numerical values only.
-        [[nodiscard]] operator const T() const {
-            return _value;
+        [[nodiscard]] constexpr operator const T() const {
+            return _data;
         }
 
         [[nodiscard]] constexpr bool operator==(const ranged<T, TFrom, TTo> &other) const {
-            return _value == other._data;
+            return _data == other._data;
         }
 
         [[nodiscard]] constexpr bool operator!=(const ranged<T, TFrom, TTo> &other) const {
+            return !(*this == other);
+        }
+    };
+
+        template<typename T, T TFrom, T TTo, T TDefault = T{}>
+    class ranged_clamped : public common_operators_unmutable<T> {
+        static_assert(TDefault >= TFrom && TDefault <= TTo, "TDefault must be within the range [TFrom, TTo]");
+        static_assert(std::is_arithmetic_v<T>, "Type T must be an arithmetic type (integral or floating point)");
+        static_assert(TFrom < TTo, "TFrom must be less than TTo");
+        
+        T _data;
+    
+    public:
+        constexpr ranged_clamped(T value = TDefault) : _data(std::min(std::max(value, TFrom), TTo)) {
+        }
+        
+        constexpr ranged_clamped(const ranged_clamped<T, TFrom, TTo> &other) : _data(other._data) {
+            //no additional checks needed, as the value is already validated
+        }
+        
+        [[nodiscard]] constexpr ranged_clamped& operator=(const ranged_clamped<T, TFrom, TTo> &other) {
+            if (this != &other) {
+                  _data = other._data;
+            }
+            return *this;
+        }
+
+        template<T TFromOther, T TToOther>
+        constexpr ranged_clamped(const ranged<T, TFromOther, TToOther> &other) : _data(std::min(std::max(other._data, TFrom), TTo)) {
+        }
+        
+        template<T TFromOther, T TToOther>
+        [[nodiscard]] constexpr ranged_clamped& operator=(const ranged_clamped<T, TFromOther, TToOther> &other) {
+            if (this != &other) {
+                _data = std::min(std::max(other._data, TFrom), TTo);
+            }
+            return *this;
+        }
+
+        //this is allowed in this case because we are dealing with numerical values only.
+        [[nodiscard]] constexpr operator const T() const {
+            return _data;
+        }
+
+        [[nodiscard]] constexpr bool operator==(const ranged_clamped<T, TFrom, TTo> &other) const {
+            return _data == other._data;
+        }
+
+        [[nodiscard]] constexpr bool operator!=(const ranged_clamped<T, TFrom, TTo> &other) const {
             return !(*this == other);
         }
     };

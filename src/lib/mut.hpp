@@ -43,14 +43,14 @@ namespace safe {
         mut<T> & operator=(mut<T> && other) = delete;
         mut(mut<T> && other) noexcept = delete;
         
-        [[nodiscard]] constexpr mut<T> & operator=(const T & other) {
+        constexpr mut<T> & operator=(const T & other) {
             if (this != &other) {
                 _data = other; // Direct assignment
             }
             return *this;
         }
         
-        [[nodiscard]] constexpr mut<T> & operator=(T && other) noexcept {
+        constexpr mut<T> & operator=(T && other) noexcept {
             if (this != &other) {
                 _data = std::move(other); // Move assignment
             }

@@ -77,5 +77,5 @@ void printExample(const safe::ref<Example>& example) {
     //now I'm going to pass the id as an unsafe reference. This works (because the print function
     //accepts it) but it does indicate we perhaps should look for a better alternative (such as .value()). It becomes
     //a visual code smell.
-    std::print("Unsafe example ID:{0}, Value:{1} \n", example->id.unsafe_reference() , example->regular_value);;
+    std::print("Unsafe example ID:{0}, Value:{1} \n", example->id.unsafe_reference() , example->regular_value);
 }

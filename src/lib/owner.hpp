@@ -40,26 +40,26 @@ namespace safe {
     protected:
         T _data;
     public:
-        owner() : _data(T{}) {}
+        constexpr owner() : _data(T{}) {}
 
         // Add this constructor
         template<typename... Args>
-        explicit owner(Args&&... args) 
+        constexpr explicit owner(Args&&... args) 
             : common_operators<T>(),
               common_operators_unmutable<T>(),
               _data(std::forward<Args>(args)...)
         {}
         
-        owner(const T & data) : _data(data) {}
+        constexpr owner(const T & data) : _data(data) {}
 
-        owner<T> & operator=(const T & data) {
+        constexpr owner<T> & operator=(const T & data) {
             _data = data; // Direct assignment
             return *this;
         }
 
-        owner(const owner<T> & other) : _data(other._data) {}
+        constexpr owner(const owner<T> & other) : _data(other._data) {}
 
-        owner(owner<T> && other) noexcept : _data(std::move(other._data)) {}
+        constexpr owner(owner<T> && other) noexcept : _data(std::move(other._data)) {}
                
         [[nodiscard]] constexpr operator ref<T>() const {
             return _data;

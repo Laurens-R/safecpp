@@ -42,12 +42,13 @@ namespace safe {
     class ptr {
         std::unique_ptr<T> & _ptr;
     public:
-        ptr(const std::unique_ptr<T> & p) : _ptr(p) {}
+        constexpr ptr(const std::unique_ptr<T> & p) : _ptr(p) {}
 
         /* We allow for copying this managed_ptr type, because the memory is managed through
          * the unique_ptr and so we can check it validity and it is safer to move around */
-        ptr(const ptr<T> &other) : _ptr(other._ptr) { }
-        ptr<T> & operator=(const ptr<T> &other) {
+        constexpr ptr(const ptr<T> &other) : _ptr(other._ptr) { }
+        
+       [[nodiscard]] constexpr ptr<T> & operator=(const ptr<T> &other) {
             if (other._ptr != _ptr) {
                 _ptr = other._ptr;
             }
@@ -58,19 +59,19 @@ namespace safe {
         ptr(ptr<T> &&other) noexcept = delete;
         ptr<T> & operator=(ptr<T> &&other) noexcept = delete;
         
-        T * operator->() const {
+        [[nodiscar]] constexpr T * operator->() const {
             return _ptr.get();
         }
 
-        [[nodiscard]] bool is_valid() const {
+        [[nodiscard]] constexpr bool is_valid() const {
             return _ptr != nullptr;
         }
 
-        [[nodiscard]] T clone() const {
+        [[nodiscard]] constexpr T clone() const {
             return *_ptr.get();
         }
         
-        [[nodiscard]] T * unsafe_pointer() const {
+        [[nodiscard]] constexpr T * unsafe_pointer() const {
             return _ptr.get();
         }
     };

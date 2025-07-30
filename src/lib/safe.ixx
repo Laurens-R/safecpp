@@ -34,6 +34,7 @@ export namespace safe {
     using safe::mut;
     using safe::ref;
     using safe::ranged;
+    using safe::ranged_clamped;
     using safe::return_of;
     using safe::ptr;
 }
