@@ -41,6 +41,10 @@ namespace safe {
             return ref_ptr<T>(p);
         }
 
+        static ref_ptr<T> create_from(const T & p) {
+            return ref_ptr<T>(&p);
+        }
+
         static ref_ptr<T> create_empty() {
             return ref_ptr<T>(nullptr);
         }
@@ -75,7 +79,7 @@ namespace safe {
         }
 
         [[nodiscard]] constexpr bool is_valid() const {
-            return _ptr == nullptr;
+            return _ptr != nullptr;
         }
 
         [[nodiscard]] constexpr T clone() const {

@@ -11,6 +11,7 @@ add_library(safelib STATIC
         ptr.hpp
         common_operators.hpp
         safe.hpp
+        index_ref.hpp
 )
 
 target_sources(safelib

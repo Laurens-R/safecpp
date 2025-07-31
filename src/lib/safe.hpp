@@ -14,6 +14,7 @@
 #include "ranged.hpp"
 #include "returnof.hpp"
 #include "ptr.hpp"
+#include "index_ref.hpp"
 
 
 #endif //SAFE_HPP

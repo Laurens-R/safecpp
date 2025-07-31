@@ -24,6 +24,7 @@
 
 
 #include <print>
+#include <vector>
 
 import safe;
 
@@ -37,6 +38,7 @@ struct Example {
 };
 
 void printExample(const safe::ref<Example>& example);
+void collectionExample();
 
 int main() {
 
@@ -54,6 +56,7 @@ int main() {
 
     //passing the example value to a function that takes a safe::ref<Example>
     printExample(example);
+    collectionExample();
     
     return 0;
 }
@@ -78,4 +81,17 @@ void printExample(const safe::ref<Example>& example) {
     //accepts it) but it does indicate we perhaps should look for a better alternative (such as .value()). It becomes
     //a visual code smell.
     std::print("Unsafe example ID:{0}, Value:{1} \n", example->id.unsafe_reference() , example->regular_value);
+}
+
+void collectionExample() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+    safe::index_ref< int> iref(numbers, 2);
+
+    auto is_ref_valid = iref.is_valid();
+
+    if (is_ref_valid) {
+        std::print("Value at index 2: {0}\n", iref.value());
+    }
+
 }

@@ -37,4 +37,6 @@ export namespace safe {
     using safe::ranged_clamped;
     using safe::return_of;
     using safe::ptr;
+    using safe::ref_ptr;
+    using safe::index_ref;
 }
