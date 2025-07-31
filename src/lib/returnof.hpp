@@ -60,13 +60,11 @@ namespace safe {
         }
 
         [[nodiscard]] constexpr operator ref<T>() const {
-            static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
-            return _value;
+            return safe::ref<T>::create_from(_value);;
         }
 
         [[nodiscard]] constexpr operator mut<T>() const {
-            static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a mutable reference.");
-            return _value;
+            return safe::mut<T>::create_from(_value);;
         }
 
         [[nodiscard]] constexpr owner<T> owner() const requires (!std::is_same_v<T, safe::ref<T>> && !std::is_same_v<T, safe::mut<T>>) {
@@ -75,13 +73,11 @@ namespace safe {
         }
 
         [[nodiscard]] constexpr ref<T> ref() {
-            static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
-            return _value;
+            return safe::ref<T>::create_from(_value);
         }
 
         [[nodiscard]] constexpr mut<T> mut() {
-            static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a safe mutable reference.");
-            return _value;
+            return safe::mut<T>::create_from(_value);
         }
 
         [[nodiscard]] constexpr T value() {

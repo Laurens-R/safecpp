@@ -33,10 +33,14 @@ namespace safe {
     class ref : public common_operators_unmutable<T>  {
     protected:
         const T & _data;
+        constexpr ref(const T & data) : _data(data) {}
     public:
+        static ref<T> create_from(const T & p) {
+            return ref<T>(p);
+        }
+
         ref() = delete;
-        constexpr ref(const T & data) : _data(data) {}        
-        
+
         constexpr ref(const ref<T> & other) = delete;
         constexpr ref(ref<T> && other) noexcept = delete;
         constexpr ref<T> & operator=(const ref<T> & other) = delete;
@@ -56,7 +60,11 @@ namespace safe {
 
         [[nodiscard]] constexpr const T & unsafe_reference() const {
             return _data;
-        }       
+        }
+
+        [[nodiscard]] constexpr T * unsafe_pointer() const {
+            return &_data;
+        }
     };
 }
 

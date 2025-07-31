@@ -60,23 +60,27 @@ namespace safe {
         constexpr owner(const owner<T> & other) : _data(other._data) {}
 
         constexpr owner(owner<T> && other) noexcept : _data(std::move(other._data)) {}
-               
-        [[nodiscard]] constexpr operator ref<T>() const {
-            return _data;
+
+        constexpr T * operator->() {
+            return &_data;
         }
 
-        [[nodiscard]] constexpr operator mut<T>() const {
-            return _data;
+        [[nodiscard]] constexpr operator safe::ref<T>() const {
+            return safe::ref<T>::create_from(_data);
         }
 
-        [[nodiscard]]  constexpr ref<T> ref() {
+        [[nodiscard]] constexpr operator safe::mut<T>() const {
+            return safe::mut<T>::create_from(_data);
+        }
+
+        [[nodiscard]] constexpr safe::ref<T> ref() {
             static_assert(std::is_same_v<T, safe::ref<T>>, "The return value is not a safe reference.");
-            return _data;
+            return safe::ref<T>::create_from(_data);
         }
 
-        [[nodiscard]] constexpr mut<T> mut() {
+        [[nodiscard]] constexpr safe::mut<T> mut() {
             static_assert(std::is_same_v<T, safe::mut<T>>, "The return value is not a safe mutable reference.");
-            return _data;
+            return  safe::mut<T>::create_from(_data);
         }
         
         [[nodiscard]] constexpr T value() const {

@@ -35,8 +35,12 @@ namespace safe {
     class mut : public common_operators<T>, common_operators_unmutable<T> {
     private:
         T& _data;
-    public:
+    protected:
         constexpr mut(T & data) : _data(data) {}
+    public:
+        static mut<T> create_from(T & p) {
+            return mut<T>(p);
+        }
 
         mut(const mut<T> & other) = delete;
         mut<T> & operator=(const mut<T> & other) = delete;
@@ -44,20 +48,18 @@ namespace safe {
         mut(mut<T> && other) noexcept = delete;
         
         constexpr mut<T> & operator=(const T & other) {
-            if (this != &other) {
-                _data = other; // Direct assignment
-            }
+            _data = other; // Direct assignment
+
             return *this;
         }
         
         constexpr mut<T> & operator=(T && other) noexcept {
-            if (this != &other) {
-                _data = std::move(other); // Move assignment
-            }
+            _data = std::move(other); // Move assignment
+
             return *this;
         }
 
-        constexpr const T* operator->() const {
+        constexpr T* operator->() const {
             return &_data;
         }
 
@@ -71,7 +73,15 @@ namespace safe {
 
         [[nodiscard]] constexpr T & unsafe_reference() const {
             return _data;
-        }  
+        }
+
+        [[nodiscard]] constexpr T * unsafe_pointer() const {
+            return &_data;
+        }
+
+        [[nodiscard]] static constexpr mut<T> unsafe_to_mut(T * ptr) {
+            return mut<T>(*ptr);
+        }
     };
 }
 #endif //MUTABLE_H
